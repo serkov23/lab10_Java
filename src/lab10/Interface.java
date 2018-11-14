@@ -6,14 +6,19 @@ import java.awt.event.*;
 
 public class Interface extends JFrame {
     private static final String STATUS_FORMAT = "x=%d, y=%d";
+    private static final Dimension DEFAULT_WINDOW_SIZE = new Dimension(500, 250);
+    private static final Dimension MIN_WINDOW_SIZE = new Dimension(50, 100);
+    private static final Dimension DEFAULT_BUTTON_SIZE = new Dimension(70, 25);
+    private static final String DEFAULT_BUTTON_TEXT = "";
+
 
     private JLabel statBar = new JLabel();
     private JButton button = new JButton();
 
     public Interface() {
         super("I don't know");
-        this.setSize(new Dimension(500, 250));
-        this.setMinimumSize(new Dimension(50, 100));
+        this.setSize(DEFAULT_WINDOW_SIZE);
+        this.setMinimumSize(MIN_WINDOW_SIZE);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -22,16 +27,14 @@ public class Interface extends JFrame {
         workPanel.setLayout(null);
         workPanel.add(button);
         button.setLocation(0, 0);
-        button.setSize(70, 25);
-        button.setText("");
+        button.setSize(DEFAULT_BUTTON_SIZE);
+        button.setText(DEFAULT_BUTTON_TEXT);
         add(workPanel);
         add(statBar, BorderLayout.SOUTH);
 
         workPanel.addMouseMotionListener(new MouseMotionAdapterForMove());
-        MouseListenerForButton l = new MouseListenerForButton();
-        button.addMouseListener(l);
-        button.addMouseMotionListener(l);
 
+        addMouseListenersForButton(button, new MouseListenerForButton());
 
         button.addKeyListener(new KeyAdapter() {
             @Override
@@ -49,6 +52,11 @@ public class Interface extends JFrame {
                 button.setLocation(e.getX() - button.getWidth() / 2, e.getY() - button.getHeight() / 2);
             }
         });
+    }
+
+    private void addMouseListenersForButton(JButton button, MouseListenerForButton l) {
+        button.addMouseListener(l);
+        button.addMouseMotionListener(l);
     }
 
     private class MouseListenerForButton extends MouseMotionAdapterForMove implements MouseListener {
